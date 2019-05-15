@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Demo</title>
+    <!--<link rel="shortcut icon" href="icon.jpg"> -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
+
+	<!-- Font -->
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700%7CAllura" rel="stylesheet">
+
+    <link href="../static/bootstrap.css" rel="stylesheet">
+
+	<link href="../static/styles.css" rel="stylesheet">
+
+	<link href="../static/responsive.css" rel="stylesheet">
+
+    <script src="../static/webcam.js"></script>
+
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#image-section').show();
+                        $("#imageArea").css('width', 'auto');
+                        $("#imageArea").css('height', 'auto');
+                        $("#imageArea").attr("src", e.target.result);
+                        $("#submit-btn").show();
+                        var fileDoc = document.getElementById('fileInput');
+                        var fileName = fileDoc.files.item(0).name;
+                        var lastIndex = fileName.lastIndexOf("_");
+                        var name = fileName.substring(0, lastIndex);
+                        $("#imageName").text(name);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $(document).on('change', '#lbpselect', function(){
+                if($(this).prop('checked')){
+                    // $('#pcaselect').attr('disabled', 'disabled');
+                    $("#pcaselect").prop('checked', false);
+                    $('#model').attr('disabled', 'disabled');
+                    $('#loss').attr('disabled', 'disabled');
+                } else {
+                    $('#pcaselect').removeAttr('disabled');
+                    $('#model').removeAttr('disabled');
+                    $('#loss').removeAttr('disabled');
+                }
+            });
+
+            $(document).on('change', '#pcaselect', function(){
+                if($(this).prop('checked')){
+                    // $('#lbpselect').attr('disabled', 'disabled');
+                    $("#lbpselect").prop('checked', false);
+                    $('#model').attr('disabled', 'disabled');
+                    $('#loss').attr('disabled', 'disabled');
+                } else {
+                    $('#lbpselect').removeAttr('disabled');
+                    $('#model').removeAttr('disabled');
+                    $('#loss').removeAttr('disabled');
+                }
+            });
+
+            Webcam.set({
+                width: 240,
+                height: 160,
+                dest_width: 240,
+                dest_height: 170,
+                image_format: 'jpeg',
+                jpeg_quality: 100
+            });
+    </script>
+
+</head>
+<body>
+    <section class="logo">
+        <img src="../static/logo/polyu.png" align="left">
+        <img src="../static/logo/eie.png" align="right">
+    </section>
+
+    <section class="maincontainer">
+        <h3 class="heading">Machine Learning for Face Recognition</h3>
+        <h5>Zhong Guan</h5>
+        <div class="leftcontainer">
+            <h4 class="subHeading">Main Panel</h4>
+            <form action="{{ url_for('handle_data') }}" method="post" id="myForm" enctype="multipart/form-data">
+                <div class="margin-b-50">
+                    <input type ="checkbox" id="pcaselect" name="pcaselect"/><span>&emsp;EigenFace</span><br>
+                    <input type ="checkbox" id="lbpselect" name="lbpselect"/><span>&emsp;Local Binary Pattern</span>
+                    <ul style="list-style-type:none;">
+                        <li>Network Model: &emsp;
+                            <select name="model" id="model">
+                                    <option value="10">ResNet-10</option>
+                                    <option value="20">ResNet-20</option>
+                                    <option value="64">ResNet-64</option>
+                            </select>
+                        </li>
+                        <li>Loss Functions: &emsp;
+                            <select name="loss" id="loss">
+                                    <option value="softmax">Softmax</option>
+                                    <option value="asoftmax">A-Softmax</option>
+                                    <option value="amsoftmax">AM-Softmax</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Select a face image for recognition:</h5>
+                        <label class="userbtn">
+                            <input type="file" id="fileInput" name="file" class="center" onchange="readURL(this);" style="max-width: 50%; display: none"/>
+                            Choose File
+                        </label>
+                        <div id="image-section" style="margin-top: 7px; display: none;">
+                            <div id="box" style="background-size: 100% 100%;">
+                                <img id="imageArea" src="#" style="max-width: 100%; max-height: 200px;" alt="Choose an image"><br/>
+                                <span id="imageName"></span>
+                            </div>
+                            <input id="submit-btn" type = "submit" class="userbtn" value="Upload" onclick="document.getElementById('spinner').style.display = 'block' ;"/>
+                        </div>
+                </div>
+            </form>
+
+            <b>Or</b>
+            <h5>Capture a face image from Webcam</h5>
+            <div>
+                <button onclick="startWebcam();" id="webcam" type="button" class="userbtn" value="Start WebCam">Start WebCam</button>
+                <a href="javascript:void(take_snapshot())" class="userbtn" id="takeshot" style="display: none">Take Snapshot</a>
+            </div>
+            <br>
+            <scan id="my_camera"></scan>
+            <div id="cam_image"></div>
+            <input type="button" id="snapsubmit" onclick="upload()" value="Upload" class="userbtn" style="display: none"><br>
+            <input type="button" id="register" onclick="register()" value="Register" class="userbtn" style="display: none">
+            <input type="text" name="faceName" id="faceName" placeholder="" value="Register your name" style="display: none" />
+            <div class="center" id="spinner" style="display: none; margin-top: 10px"><img src="../static/spinner.gif"></div>
+        </div>
+
+        <div class="rightcontainer" id="rightcontainer">
+            <h4 class="subHeading">Recognition Result</h4>
+        </div>
+
+    </section>
+
+
+	<footer>
+		<p class="copyright">Copyright &copy;Aaron Z Guan <script>document.write(new Date().getFullYear());</script>
+		</p>
+	</footer>
+
+
+    <script language="JavaScript">
+
+        function take_snapshot() {
+            Webcam.snap( function(data_uri) {
+                document.getElementById('cam_image').innerHTML = '<img id="image" src="'+data_uri+'"/>';
+                $('#snapsubmit').show();
+                $('#register').show();
+                $('#faceName').show();
+            } );
+        }
+
+        function startWebcam(){
+            var elem = document.getElementById("webcam");
+            $('#takeshot').show();
+            if (elem.textContent=="Start WebCam"){
+                Webcam.attach('#my_camera');
+                elem.textContent = "Stop WebCam";}
+            else{
+                Webcam.reset();
+                elem.textContent = "Start WebCam";
+            }
+        }
+
+        function upload() {
+            document.getElementById('spinner').style.display = 'block' ;
+            console.log("Uploading...")
+            var image = document.getElementById('image').src;
+            var form = document.getElementById('myForm');
+            var formData = new FormData(form);
+            formData.append("data", image);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "/camresult",true);
+
+            // check when state changes,
+            xmlhttp.onreadystatechange = function() {
+                if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    window.location.href = '/result_cam';
+                }
+                else{
+                    console.log('status' + xmlhttp.status);
+                }
+            }
+            xmlhttp.send(formData);
+
+            // console.log(formData.get('data'));
+        }
+
+
+        function register() {
+            console.log("Register new face...")
+            var image = document.getElementById('image').src;
+            var name = document.getElementById('faceName').value;
+            var formData = new FormData();
+            formData.append("data", image);
+            formData.append("name", name);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "/register",true);
+
+            // check when state changes,
+            xmlhttp.onreadystatechange = function() {
+                if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    alert(xmlhttp.responseText);
+                }
+                else{
+                    console.log('status' + xmlhttp.status);
+                }
+            }
+            xmlhttp.send(formData);
+
+            // console.log(formData.get('data'));
+        }
+
+    </script>
+</body>
+</html>
