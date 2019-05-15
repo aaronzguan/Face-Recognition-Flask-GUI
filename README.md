@@ -13,7 +13,7 @@ For deep face recognition, the supported loss functions include:
   <img src="https://github.com/aaronzguan/Face-Recognition-Flask-GUI/blob/master/UI.png" height="450">
 </p>
 
-To understand how it works, please watch the [Demonstration Video]("https://www.youtube.com/watch?v=DF9S3HiIlSo")
+To understand how it works, please watch the [Demonstration Video](https://www.youtube.com/watch?v=DF9S3HiIlSo)
 
 ## Reference
 1. W. Liu, Y. Wen, Z. Yu, M. Li, B. Raj, and L. Song, "SphereFace: Deep Hypersphere Embedding for Face Recognition," CVPR, 2017.
