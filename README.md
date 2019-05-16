@@ -19,7 +19,7 @@ The supported loss functions include:
   <img src="https://github.com/aaronzguan/Face-Recognition-Flask-GUI/blob/master/UI.png" height="450">
 </p>
 
-To understand how it works, please watch the [Demonstration Video](https://www.youtube.com/watch?v=DF9S3HiIlSo).
+To understand how it works, please watch the [Demonstration Video on Youtube](https://www.youtube.com/watch?v=DF9S3HiIlSo).
 
 ## Reference
 1. K. Zhang, Z. Zhang, Z. Li, and Y. Qiao, “Joint face detection and alignment using multi-task cascaded convolutional networks,” CoRR, vol. abs/1604.02878, 2016.
