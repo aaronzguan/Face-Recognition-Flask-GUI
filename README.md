@@ -1,4 +1,7 @@
 # Face-Recognition-Flask-GUI
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This repo is a face recognition demonstration system, which is a part of my capstone project at Hong Kong Polytechnic University. This system is developed by Flask, Pytorch, HTML, JavaScript, and CSS. Available methods include EigenFace, LBP, and ResNet-based deep face recognition.
 
 ## Features
